@@ -23,6 +23,7 @@ import axios from "axios";
 import { server } from "../../constants/config";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import api from "../../redux/api/api";
 import { userNotExists } from "../../redux/reducers/auth";
 import {
   setIsMobile,
@@ -66,6 +67,8 @@ const Header = () => {
         withCredentials: true,
       });
       dispatch(userNotExists());
+      // Drop the previous user's cached chats/messages so the next login starts clean
+      dispatch(api.util.resetApiState());
       toast.success(data.message);
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong");

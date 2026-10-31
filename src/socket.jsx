@@ -1,4 +1,4 @@
-import { createContext, useMemo, useContext } from "react";
+import { createContext, useMemo, useContext, useEffect } from "react";
 import io from "socket.io-client";
 import { server } from "./constants/config";
 
@@ -16,6 +16,13 @@ const SocketProvider = ({ children }) => {
       }),
     []
   );
+
+  // Close the connection on logout (provider unmounts) so it doesn't keep
+  // receiving the previous user's events; connect() is a no-op if already open
+  useEffect(() => {
+    socket.connect();
+    return () => socket.disconnect();
+  }, [socket]);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

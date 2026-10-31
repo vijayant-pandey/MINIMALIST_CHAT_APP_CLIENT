@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import { VisuallyHiddenInput } from "../components/styles/StyledComponents";
 import { bgGradient } from "../constants/color";
 import { server } from "../constants/config";
+import api from "../redux/api/api";
 import { userExists } from "../redux/reducers/auth";
 import { usernameValidator } from "../utils/validators";
 
@@ -57,6 +58,7 @@ const Login = () => {
         },
         config
       );
+      dispatch(api.util.resetApiState());
       dispatch(userExists(data.user));
       toast.success(data.message, {
         id: toastId,
@@ -97,6 +99,7 @@ const Login = () => {
         config
       );
 
+      dispatch(api.util.resetApiState());
       dispatch(userExists(data.user));
       toast.success(data.message, {
         id: toastId,
