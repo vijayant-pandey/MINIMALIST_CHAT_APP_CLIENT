@@ -1,5 +1,6 @@
 import { createContext, useMemo, useContext } from "react";
 import io from "socket.io-client";
+import { server } from "./constants/config";
 
 const SocketContext = createContext();
 
@@ -8,9 +9,10 @@ const getSocket = () => useContext(SocketContext);
 const SocketProvider = ({ children }) => {
   const socket = useMemo(
     () =>
-      io("https://minimalist-chat-app-server.onrender.com", {
+      io(server, {
         withCredentials: true,
-        transports: ["websocket"], // Force WebSocket transport
+        // Proxied through Vercel (see vercel.json), which doesn't support WebSockets
+        transports: ["polling"],
       }),
     []
   );
