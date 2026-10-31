@@ -10,10 +10,14 @@ import {
 } from "../../constants/events";
 import { useErrors, useSocketEvents } from "../../hooks/hook";
 import { getOrSaveFromStorage } from "../../lib/features";
-import { useMyChatsQuery } from "../../redux/api/api";
+import {
+  useGetNotificationsQuery,
+  useMyChatsQuery,
+} from "../../redux/api/api";
 import {
   incrementNotification,
   setNewMessagesAlert,
+  setNotificationCount,
 } from "../../redux/reducers/chat";
 import {
   setIsDeleteMenu,
@@ -45,7 +49,16 @@ const AppLayout = () => (WrappedComponent) => {
 
     const { isLoading, data, isError, error, refetch } = useMyChatsQuery("");
 
+    // Load pending friend requests so the badge is correct after login/refresh,
+    // not only when a live NEW_REQUEST socket event arrives
+    const { data: notificationsData } = useGetNotificationsQuery();
+
     useErrors([{ isError, error }]);
+
+    useEffect(() => {
+      if (notificationsData?.allRequests)
+        dispatch(setNotificationCount(notificationsData.allRequests.length));
+    }, [notificationsData, dispatch]);
 
     useEffect(() => {
       getOrSaveFromStorage({ key: NEW_MESSAGE_ALERT, value: newMessagesAlert });

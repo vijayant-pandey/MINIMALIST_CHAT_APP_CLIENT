@@ -25,6 +25,9 @@ const chatSlice = createSlice({
     resetNotificationCount: (state) => {
       state.notificationCount = 0;
     },
+    setNotificationCount: (state, action) => {
+      state.notificationCount = action.payload;
+    },
 
     setNewMessagesAlert: (state, action) => {
       const chatId = action.payload.chatId;
@@ -55,6 +58,7 @@ export default chatSlice;
 export const {
   incrementNotification,
   resetNotificationCount,
+  setNotificationCount,
   setNewMessagesAlert,
   removeNewMessagesAlert,
 } = chatSlice.actions;
